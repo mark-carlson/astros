@@ -1,24 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+
+import "./App.css";
 
 function App() {
+  const [astronauts, setAstronauts] = useState([]);
+
+  const getAstros = async () => {
+    const result = await fetch("http://api.open-notify.org/astros.json");
+    const body = await result.json();
+    setAstronauts(body.people);
+  };
+
+  useEffect(() => {
+    getAstros();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Craft</th>
+          </tr>
+        </thead>
+        <tbody>
+          {astronauts.map((astro) => (
+            <tr key={astro.name}>
+              <td>{astro.name}</td>
+              <td>{astro.craft}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
